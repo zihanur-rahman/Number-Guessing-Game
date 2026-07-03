@@ -7,7 +7,6 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;600;700&display=swap');
 
-    /* ── reset & base ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
@@ -32,9 +31,9 @@
       align-items: center;
       justify-content: center;
       min-height: 100vh;
+      padding: 16px;
     }
 
-    /* ── card ── */
     .card {
       width: min(460px, 94vw);
       background: var(--surface);
@@ -43,9 +42,12 @@
       padding: 36px 32px 32px;
       position: relative;
       overflow: hidden;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .card:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(0,0,0,0.4); }
     }
 
-    /* top glow line */
     .card::before {
       content: '';
       position: absolute;
@@ -54,26 +56,41 @@
       background: linear-gradient(90deg, transparent, var(--accent), transparent);
     }
 
-    /* ── header ── */
-    .header { text-align: center; margin-bottom: 28px; }
+    .icon-btn {
+      position: absolute;
+      top: 14px; right: 14px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 50%;
+      width: 34px; height: 34px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+      z-index: 2;
+    }
+    .icon-btn:hover { border-color: var(--accent); }
+    .icon-btn:active { transform: scale(0.88); }
+
+    .header { text-align: center; margin-bottom: 26px; }
     .header h1 {
       font-family: var(--mono);
-      font-size: 1.35rem;
+      font-size: 1.3rem;
       color: var(--accent);
-      letter-spacing: 0.08em;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
     }
     .header p {
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       color: var(--muted);
       margin-top: 6px;
     }
 
-    /* ── big number display ── */
     .display-wrap {
       text-align: center;
-      margin: 0 0 28px;
-      height: 130px;
+      margin: 0 0 18px;
+      height: 120px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -82,7 +99,7 @@
 
     #display-number {
       font-family: var(--mono);
-      font-size: 5.5rem;
+      font-size: 5.2rem;
       line-height: 1;
       color: var(--accent);
       transition: color 0.2s;
@@ -90,37 +107,35 @@
     }
 
     #display-msg {
-      font-size: 0.92rem;
+      font-size: 0.9rem;
       color: var(--muted);
       margin-top: 8px;
       min-height: 1.3em;
-      transition: color 0.2s;
+      transition: opacity 0.15s ease, transform 0.15s ease, color 0.2s;
     }
+    #display-msg.msg-hide { opacity: 0; transform: translateY(-4px); }
 
-    /* shake animation */
     @keyframes shake {
       0%,100% { transform: translateX(0); }
-      20%      { transform: translateX(-8px); }
-      40%      { transform: translateX(8px); }
-      60%      { transform: translateX(-5px); }
-      80%      { transform: translateX(5px); }
+      20% { transform: translateX(-8px); }
+      40% { transform: translateX(8px); }
+      60% { transform: translateX(-5px); }
+      80% { transform: translateX(5px); }
     }
     .shake { animation: shake 0.35s ease; }
 
-    /* bounce animation */
     @keyframes pop {
-      0%   { transform: scale(1); }
-      40%  { transform: scale(1.15); }
+      0% { transform: scale(1); }
+      40% { transform: scale(1.15); }
       100% { transform: scale(1); }
     }
     .pop { animation: pop 0.3s ease; }
 
-    /* ── progress bar ── */
     .progress-wrap {
       background: var(--border);
       border-radius: 99px;
       height: 6px;
-      margin-bottom: 22px;
+      margin-bottom: 10px;
       overflow: hidden;
     }
     #progress-bar {
@@ -131,18 +146,84 @@
       width: 100%;
     }
 
-    /* ── stats row ── */
-    .stats {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.78rem;
+    .attempts-label {
+      text-align: center;
+      font-size: 0.82rem;
       color: var(--muted);
       margin-bottom: 20px;
     }
-    .stats span { font-family: var(--mono); }
-    .stats .val { color: var(--text); font-weight: 600; }
+    .attempts-label .val {
+      font-family: var(--mono);
+      font-weight: 700;
+      color: var(--text);
+    }
 
-    /* ── input row ── */
+    .difficulty-row {
+      margin-bottom: 18px;
+      color: var(--muted);
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    #difficulty {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 7px 10px;
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    #difficulty:focus { border-color: var(--accent); }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+    .stat-card {
+      position: relative;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 8px 10px;
+      text-align: center;
+    }
+    .stat-value {
+      font-family: var(--mono);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .stat-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+    .stat-reset {
+      position: absolute;
+      top: 6px; right: 6px;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.65rem;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s, transform 0.15s ease;
+    }
+    .stat-reset:hover { border-color: var(--danger); color: var(--danger); }
+    .stat-reset:active { transform: scale(0.85) rotate(-20deg); }
+
     .input-row {
       display: flex;
       gap: 10px;
@@ -160,9 +241,16 @@
       text-align: center;
       padding: 12px 8px;
       outline: none;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
-    #guess-input:focus { border-color: var(--accent); }
+    #guess-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0,229,160,0.15);
+    }
+    #guess-input.invalid {
+      border-color: var(--danger);
+      box-shadow: 0 0 0 3px rgba(255,83,112,0.18);
+    }
     #guess-input:disabled { opacity: 0.4; cursor: not-allowed; }
     #guess-input::placeholder { color: var(--muted); font-size: 1rem; }
 
@@ -176,14 +264,13 @@
       font-weight: 700;
       padding: 12px 22px;
       cursor: pointer;
-      transition: background 0.2s, transform 0.1s;
+      transition: background 0.2s, transform 0.12s ease;
       white-space: nowrap;
     }
     #btn-guess:hover  { background: #00ffb3; }
-    #btn-guess:active { transform: scale(0.97); }
+    #btn-guess:active { transform: scale(0.95); }
     #btn-guess:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    /* ── history ── */
     .history-label {
       font-size: 0.72rem;
       text-transform: uppercase;
@@ -216,7 +303,9 @@
       font-family: var(--mono);
       font-size: 0.85rem;
       animation: fadeIn 0.25s ease;
+      transition: transform 0.15s ease, border-color 0.15s ease;
     }
+    .hist-item:hover { transform: translateX(3px); border-color: var(--muted); }
     @keyframes fadeIn { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:translateY(0); } }
 
     .hist-item .num  { color: var(--text); min-width: 32px; }
@@ -229,7 +318,6 @@
     .hist-item.high .hint { color: var(--danger); }
     .hist-item.win  .hint { color: var(--accent); }
 
-    /* ── new game button ── */
     #btn-new {
       display: none;
       width: 100%;
@@ -243,96 +331,199 @@
       font-weight: 600;
       padding: 12px;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: background 0.2s, transform 0.12s ease;
     }
     #btn-new:hover { background: rgba(0,229,160,0.08); }
+    #btn-new:active { transform: scale(0.97); }
 
-    /* ── empty history note ── */
     .empty-note {
       text-align: center;
       color: var(--muted);
       font-size: 0.8rem;
       padding: 12px 0;
     }
+
+    @media (max-width: 480px) {
+      .card { padding: 26px 18px 22px; border-radius: 14px; }
+      .header h1 { font-size: 1.05rem; }
+      .header p { font-size: 0.74rem; }
+      #display-number { font-size: 3.6rem; }
+      .display-wrap { height: 100px; }
+      .stats-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+      .stat-value { font-size: 0.9rem; }
+      .stat-label { font-size: 0.58rem; }
+      .input-row { flex-direction: column; }
+      #btn-guess { width: 100%; padding: 14px; }
+      #guess-input { font-size: 1.25rem; }
+      #btn-guess, #btn-new { min-height: 46px; }
+      .difficulty-row { justify-content: space-between; }
+      #difficulty { flex: 1; }
+    }
+
+    @media (max-width: 340px) {
+      .stats-grid { grid-template-columns: repeat(3, 1fr); gap: 4px; }
+      .stat-card { padding: 9px 4px 8px; }
+    }
   </style>
 </head>
 <body>
 
 <div class="card">
+  <button id="btn-sound" class="icon-btn" title="Toggle sound">🔊</button>
 
   <div class="header">
     <h1>🎯 Number Guessing Game</h1>
     <p id="range-label">Guess a number between 1 and 100</p>
   </div>
 
-  <!-- big number / feedback -->
   <div class="display-wrap">
     <div id="display-number">?</div>
-    <div id="display-msg">Enter your first guess</div>
+    <div id="display-msg" aria-live="polite">Enter your first guess</div>
   </div>
 
-  <!-- attempt progress bar -->
   <div class="progress-wrap">
     <div id="progress-bar"></div>
   </div>
-
-  <!-- stats -->
-  <div class="stats">
-    <div>Attempts left: <span class="val" id="stat-left">7</span></div>
-    <div>Best: <span class="val" id="stat-best">—</span></div>
+  <div class="attempts-label">
+    Attempts left: <span class="val" id="stat-left">7</span> / <span id="stat-max">7</span>
   </div>
 
-  <!-- input -->
+  <div class="difficulty-row">
+    <label for="difficulty">Difficulty</label>
+    <select id="difficulty">
+      <option value="hard">Hard (5 attempts)</option>
+      <option value="medium" selected>Medium (7 attempts)</option>
+      <option value="easy">Easy (10 attempts)</option>
+    </select>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <button id="btn-reset-best" class="stat-reset" title="Reset best score"><span class="reset-icon">🔄</span></button>
+      <div class="stat-value" id="stat-best">—</div>
+      <div class="stat-label">Best Score</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="stat-winrate">—</div>
+      <div class="stat-label">Win Rate</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="stat-games">0</div>
+      <div class="stat-label">Games</div>
+    </div>
+  </div>
+
   <div class="input-row">
     <input id="guess-input" type="number" min="1" max="100"
-           placeholder="Your guess…" autocomplete="off" />
+           placeholder="Your guess…" autocomplete="off" inputmode="numeric" />
     <button id="btn-guess">Guess</button>
   </div>
 
-  <!-- history -->
   <div class="history-label">Guess History</div>
   <ul id="history-list">
     <li class="empty-note">No guesses yet</li>
   </ul>
 
   <button id="btn-new">🔄 Play Again</button>
-
 </div>
 
 <script>
-  // ── state ────────────────────────────────────────────────────────────────
-  const MAX   = 7;
-  const LOW   = 1;
-  const HIGH  = 100;
+  const LOW  = 1;
+  const HIGH = 100;
+  const DIFFICULTY_MAP = { easy: 10, medium: 7, hard: 5 };
 
-  let secret, attemptsUsed, gameActive, bestScore = null;
+  const dispNum          = document.getElementById('display-number');
+  const dispMsg          = document.getElementById('display-msg');
+  const progBar          = document.getElementById('progress-bar');
+  const statLeft         = document.getElementById('stat-left');
+  const statMax          = document.getElementById('stat-max');
+  const statBest         = document.getElementById('stat-best');
+  const statWinrate      = document.getElementById('stat-winrate');
+  const statGames        = document.getElementById('stat-games');
+  const btnResetBest     = document.getElementById('btn-reset-best');
+  const input            = document.getElementById('guess-input');
+  const btnGuess         = document.getElementById('btn-guess');
+  const btnNew           = document.getElementById('btn-new');
+  const histList         = document.getElementById('history-list');
+  const difficultySelect = document.getElementById('difficulty');
+  const btnSound         = document.getElementById('btn-sound');
 
-  // ── DOM refs ─────────────────────────────────────────────────────────────
-  const dispNum    = document.getElementById('display-number');
-  const dispMsg    = document.getElementById('display-msg');
-  const progBar    = document.getElementById('progress-bar');
-  const statLeft   = document.getElementById('stat-left');
-  const statBest   = document.getElementById('stat-best');
-  const input      = document.getElementById('guess-input');
-  const btnGuess   = document.getElementById('btn-guess');
-  const btnNew     = document.getElementById('btn-new');
-  const histList   = document.getElementById('history-list');
+  let MAX = DIFFICULTY_MAP[difficultySelect.value];
+  let secret, attemptsUsed, gameActive;
 
-  // ── helpers ──────────────────────────────────────────────────────────────
+  let bestScore   = Number(localStorage.getItem('bestScore')) || null;
+  let gamesPlayed = Number(localStorage.getItem('gamesPlayed')) || 0;
+  let gamesWon    = Number(localStorage.getItem('gamesWon')) || 0;
+  let soundOn     = localStorage.getItem('soundOn') !== 'false';
+
+  let audioCtx = null;
+  function ensureAudio() {
+    if (!audioCtx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (AC) audioCtx = new AC();
+    }
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+  }
+  function playTone(freq, duration, type, vol, delay) {
+    if (!soundOn) return;
+    ensureAudio();
+    if (!audioCtx) return;
+    const startAt = audioCtx.currentTime + (delay || 0);
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type || 'sine';
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(vol || 0.12, startAt);
+    gain.gain.exponentialRampToValueAtTime(0.0001, startAt + duration);
+    osc.connect(gain).connect(audioCtx.destination);
+    osc.start(startAt);
+    osc.stop(startAt + duration + 0.02);
+  }
+  function soundClick()   { playTone(600, 0.07, 'square', 0.08); }
+  function soundLow()     { playTone(320, 0.15, 'sine', 0.12); }
+  function soundHigh()    { playTone(200, 0.15, 'sawtooth', 0.1); }
+  function soundInvalid() { playTone(140, 0.18, 'square', 0.1); }
+  function soundWin() {
+    [523, 659, 784, 1046].forEach((f, i) => playTone(f, 0.22, 'triangle', 0.14, i * 0.09));
+  }
+  function soundLose()    { playTone(160, 0.4, 'sawtooth', 0.14); }
+
+  function updateSoundIcon() { btnSound.textContent = soundOn ? '🔊' : '🔇'; }
+  btnSound.addEventListener('click', () => {
+    soundOn = !soundOn;
+    localStorage.setItem('soundOn', soundOn);
+    updateSoundIcon();
+    if (soundOn) { ensureAudio(); soundClick(); }
+  });
+  updateSoundIcon();
+
   function randInt(a, b) { return Math.floor(Math.random() * (b - a + 1)) + a; }
+
+  function setMessage(text, color) {
+    dispMsg.style.color = color || 'var(--muted)';
+    dispMsg.classList.add('msg-hide');
+    setTimeout(() => {
+      dispMsg.textContent = text;
+      dispMsg.classList.remove('msg-hide');
+    }, 140);
+  }
 
   function setDisplay(num, msg, numColor, msgColor) {
     dispNum.textContent = num;
-    dispMsg.textContent = msg;
     dispNum.style.color = numColor || 'var(--accent)';
-    dispMsg.style.color = msgColor || 'var(--muted)';
+    setMessage(msg, msgColor);
   }
 
   function animateDisplay(cls) {
-    dispNum.classList.remove('shake','pop');
-    void dispNum.offsetWidth; // reflow
+    dispNum.classList.remove('shake', 'pop');
+    void dispNum.offsetWidth;
     dispNum.classList.add(cls);
     dispNum.addEventListener('animationend', () => dispNum.classList.remove(cls), { once: true });
+  }
+
+  function flashInvalidInput() {
+    input.classList.add('invalid');
+    setTimeout(() => input.classList.remove('invalid'), 400);
   }
 
   function updateProgress() {
@@ -344,12 +535,11 @@
       pct > 28 ? 'var(--warn)'   : 'var(--danger)';
     statLeft.textContent = remaining;
     statLeft.style.color =
-      remaining > 3 ? 'var(--text)' :
-      remaining > 1 ? 'var(--warn)' : 'var(--danger)';
+      remaining > MAX * 0.4 ? 'var(--text)' :
+      remaining > 1          ? 'var(--warn)' : 'var(--danger)';
   }
 
   function addHistory(guess, type, hint) {
-    // remove empty note
     const empty = histList.querySelector('.empty-note');
     if (empty) empty.remove();
 
@@ -362,46 +552,69 @@
     histList.prepend(li);
   }
 
-  // ── new game ─────────────────────────────────────────────────────────────
+  function updateStatsDisplay() {
+    statBest.textContent    = bestScore !== null ? bestScore + ' pts' : '—';
+    statGames.textContent   = gamesPlayed;
+    statWinrate.textContent = gamesPlayed > 0 ? Math.round((gamesWon / gamesPlayed) * 100) + '%' : '—';
+    statMax.textContent     = MAX;
+  }
+
+  function recordGameResult(won) {
+    gamesPlayed++;
+    localStorage.setItem('gamesPlayed', gamesPlayed);
+    if (won) {
+      gamesWon++;
+      localStorage.setItem('gamesWon', gamesWon);
+    }
+    updateStatsDisplay();
+  }
+
   function newGame() {
+    MAX = DIFFICULTY_MAP[difficultySelect.value];
     secret       = randInt(LOW, HIGH);
     attemptsUsed = 0;
     gameActive   = true;
 
+    dispMsg.classList.remove('msg-hide');
     setDisplay('?', 'Enter your first guess', 'var(--muted)', 'var(--accent)');
     progBar.style.width = '100%';
     progBar.style.background = 'var(--accent)';
     statLeft.textContent = MAX;
     statLeft.style.color = 'var(--text)';
+    statMax.textContent = MAX;
 
     histList.innerHTML = '<li class="empty-note">No guesses yet</li>';
     input.value = '';
     input.disabled = false;
+    input.classList.remove('invalid');
     input.focus();
     btnGuess.disabled = false;
     btnGuess.textContent = 'Guess';
     btnNew.style.display = 'none';
+
+    updateStatsDisplay();
   }
 
-  // ── guess handler ─────────────────────────────────────────────────────────
   function handleGuess() {
     if (!gameActive) return;
+    ensureAudio();
 
     const raw = input.value.trim();
     const guess = parseInt(raw, 10);
 
     if (!raw || isNaN(guess) || guess < LOW || guess > HIGH) {
       animateDisplay('shake');
-      dispMsg.textContent = `Please enter a number between ${LOW} and ${HIGH}`;
-      dispMsg.style.color = 'var(--warn)';
+      flashInvalidInput();
+      soundInvalid();
+      setMessage(`Please enter a number between ${LOW} and ${HIGH}`, 'var(--warn)');
       input.value = '';
       return;
     }
 
+    soundClick();
     attemptsUsed++;
     input.value = '';
 
-    // ── correct ──
     if (guess === secret) {
       addHistory(guess, 'win', '✅ Correct!');
       setDisplay('🎉',
@@ -410,48 +623,51 @@
       animateDisplay('pop');
       progBar.style.width = '0%';
       statLeft.textContent = 0;
+      soundWin();
 
       const score = (MAX - attemptsUsed + 1) * 100;
       if (bestScore === null || score > bestScore) {
         bestScore = score;
-        statBest.textContent = score + ' pts';
+        localStorage.setItem('bestScore', bestScore);
       }
+      recordGameResult(true);
       endGame();
       return;
     }
 
     updateProgress();
 
-    // ── out of attempts ──
     if (attemptsUsed >= MAX) {
       addHistory(guess, guess > secret ? 'high' : 'low', '❌');
       setDisplay(secret,
         `Out of attempts! The number was ${secret}.`,
         'var(--danger)', 'var(--danger)');
       animateDisplay('shake');
+      soundLose();
+      recordGameResult(false);
       endGame();
       return;
     }
 
-    // ── hint ──
     if (guess < secret) {
       addHistory(guess, 'low', '↑ Too low');
       setDisplay(guess,
         `Too low! Go higher. (${MAX - attemptsUsed} left)`,
         'var(--warn)', 'var(--warn)');
       animateDisplay('pop');
+      soundLow();
     } else {
       addHistory(guess, 'high', '↓ Too high');
       setDisplay(guess,
         `Too high! Go lower. (${MAX - attemptsUsed} left)`,
         'var(--danger)', 'var(--danger)');
       animateDisplay('shake');
+      soundHigh();
     }
 
     input.focus();
   }
 
-  // ── end game ──────────────────────────────────────────────────────────────
   function endGame() {
     gameActive = false;
     input.disabled = true;
@@ -459,12 +675,21 @@
     btnNew.style.display = 'block';
   }
 
-  // ── events ────────────────────────────────────────────────────────────────
   btnGuess.addEventListener('click', handleGuess);
-  btnNew.addEventListener('click', newGame);
+  btnNew.addEventListener('click', () => { soundClick(); newGame(); });
   input.addEventListener('keydown', e => { if (e.key === 'Enter') handleGuess(); });
+  difficultySelect.addEventListener('change', () => { soundClick(); newGame(); });
 
-  // ── start ─────────────────────────────────────────────────────────────────
+  btnResetBest.addEventListener('click', () => {
+    ensureAudio();
+    soundInvalid();
+    localStorage.removeItem('bestScore');
+    bestScore = null;
+    updateStatsDisplay();
+    btnResetBest.style.transform = 'scale(0.8) rotate(-25deg)';
+    setTimeout(() => { btnResetBest.style.transform = ''; }, 250);
+  });
+
   newGame();
 </script>
 </body>
