@@ -401,7 +401,7 @@
 
   <div class="stats-grid">
     <div class="stat-card">
-      <button id="btn-reset-best" class="stat-reset" title="Reset best score"><span class="reset-icon">🔄</span></button>
+      <button id="btn-reset-best" class="stat-reset" title="Reset all stats"><span class="reset-icon">🔄</span></button>
       <div class="stat-value" id="stat-best">—</div>
       <div class="stat-label">Best Score</div>
     </div>
@@ -683,14 +683,18 @@
   difficultySelect.addEventListener('change', () => { soundClick(); newGame(); });
 
   btnResetBest.addEventListener('click', () => {
-    ensureAudio();
-    soundInvalid();
-    localStorage.removeItem('bestScore');
-    bestScore = null;
-    updateStatsDisplay();
-    btnResetBest.style.transform = 'scale(0.8) rotate(-25deg)';
-    setTimeout(() => { btnResetBest.style.transform = ''; }, 250);
-  });
+  ensureAudio();
+  soundInvalid();
+  localStorage.removeItem('bestScore');
+  localStorage.removeItem('gamesPlayed');
+  localStorage.removeItem('gamesWon');
+  bestScore   = null;
+  gamesPlayed = 0;
+  gamesWon    = 0;
+  updateStatsDisplay();
+  btnResetBest.style.transform = 'scale(0.8) rotate(-25deg)';
+  setTimeout(() => { btnResetBest.style.transform = ''; }, 250);
+});
 
   newGame();
 </script>
