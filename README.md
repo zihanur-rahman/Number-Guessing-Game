@@ -4,7 +4,7 @@
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 ![GitHub Pages](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-222?style=for-the-badge&logo=github&logoColor=white)
-![License](https://img.shields.io/github/license/zihanur-rahman/Number-Guessing-Game?style=for-the-badge)
+![License](https://img.shields.io/github/license/zihanur-rahman/Number-Guessing-Game?style=for-the-badge&cache=1)
 
 A sleek, dark-themed, browser-based Number Guessing Game with difficulty levels, sound effects, live stats, and a fully responsive UI.
 
